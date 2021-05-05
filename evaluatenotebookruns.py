@@ -18,7 +18,8 @@ def test_job_run():
       if status_job=='SUCCESS':
           status_notebook = data['notebook_output']['result']
           statuses.append(status_notebook.lower())
-  if('failed' in statuses):
+          
+  if any('failed' in s for s in statuses):
        raise Exception("Data Quality tests failed")
 
 if __name__ == '__main__':
