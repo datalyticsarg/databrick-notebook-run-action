@@ -19,3 +19,5 @@ python3 ${SCRIPTPATH}/executenotebook.py --workspace=${DBURL}\
                         --localpath=${LOCALPATH}\
                         --workspacepath=${WORKSPACEPATH}\
                         --outfilepath=${OUTFILEPATH}
+                        
+python3 ${SCRIPTPATH}/evaluatenotebookruns.py ${OUTFILEPATH}

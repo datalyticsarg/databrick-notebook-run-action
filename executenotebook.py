@@ -51,7 +51,7 @@ def main():
   # Generate array from walking local path
 
   notebooks = []
-  print(os.walk(localpath))
+  
   for path, subdirs, files in os.walk(localpath):
       for name in files:
           fullpath = path + '/' + name
@@ -76,9 +76,6 @@ def main():
       # workpath removes extension
       fullworkspacepath = workspacepath + name
 
-      #fullworkspacepath = '/'+workspacepath + '/notebooks/' + name
-      #fullworkspacepath = '/Users/hermanwu@microsoft.com/notebooks/' + name
-
       print('Running job for:' + fullworkspacepath)
       values = {'run_name': name, 'existing_cluster_id': clusterid, 'timeout_seconds': 3600, 'notebook_task': {'notebook_path': fullworkspacepath}}
      
@@ -98,18 +95,17 @@ def main():
       waiting = True
       while waiting:
           time.sleep(10)
-          jobresp = requests.get(workspace + '/api/2.0/jobs/runs/get?run_id='+str(runid),
+          jobresp = requests.get(workspace + '/api/2.0/jobs/runs/get-output?run_id='+str(runid),
                            json=values, auth=("token", token))
           jobjson = jobresp.text
           print("jobjson:" + jobjson)
           j = json.loads(jobjson)
-          current_state = j['state']['life_cycle_state']
-          runid = j['run_id']
+          current_state = j['metadata']['state']['life_cycle_state']
+          runid = j['metadata']['run_id']
           if current_state in ['TERMINATED', 'INTERNAL_ERROR', 'SKIPPED'] or i >= 12:
               break
           i=i+1
 
-      #TODO: Add create filer if it's doen't exist
       if outfilepath != '':
           file = open(outfilepath + '/' +  str(runid) + '.json', 'w')
           file.write(json.dumps(j))
