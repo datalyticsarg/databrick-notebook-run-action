@@ -51,6 +51,7 @@ def main():
   # Generate array from walking local path
 
   notebooks = []
+  print(os.walk(localpath))
   for path, subdirs, files in os.walk(localpath):
       for name in files:
           fullpath = path + '/' + name
